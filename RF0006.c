@@ -19,7 +19,7 @@ void imprimirFuncionario(Funcionario f) {
 }
 
 int busca_arquivo(int chave_procurada) {
-    FILE *arquivo = fopen("arquivo.csv", "r");
+    FILE *arquivo = fopen("registro.csv", "r");
     if (arquivo == NULL) {
         return 0;
     }
@@ -40,7 +40,7 @@ int busca_arquivo(int chave_procurada) {
 }
 
 void escrita() {
-    FILE *arquivo = fopen("arquivo.csv", "a");
+    FILE *arquivo = fopen("registro.csv", "a");
     if (arquivo == NULL) {
         return;
     }
@@ -54,21 +54,26 @@ void escrita() {
     fclose(arquivo);
 }
 
-void auditoria(int operacao) {
+void auditoria(int operacao, char nome_usuario[]) {
     FILE *arquivo = fopen("log.csv", "a");
     if (arquivo == NULL) return;
-    fprintf(arquivo, "Usuario: Admin, Operacao: %d, Status: Sucesso\n", operacao);
+    fprintf(arquivo, "Usuario: %s, Operacao: %d, Status: Sucesso\n", operacao);
     fclose(arquivo);
 }
 
-int editar() {
+/*Coloquei numeros equivalentes a operção realizada para facilitar e economizaar memoria
+0 = ENCERRAR PROGRAMA
+1 = EDITAR
+*/ 
+
+int editar(char usuario_ativo[]) {
     int key;
     printf("ID para editar: ");
     if (scanf("%d", &key) != 1) return 0;
 
     if (busca_arquivo(key)) {
         escrita();
-        auditoria(1);
+        auditoria(1, usuario_ativo);
         return 1;
     } else {
         printf("Nenhuma chave encontrada.\n");
@@ -76,7 +81,3 @@ int editar() {
     }
 }
 
-int main() {
-    editar();
-    return 0;
-}
